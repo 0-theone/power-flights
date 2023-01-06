@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import got from 'got';
+import { request } from 'undici'
 
 @Injectable()
 export class FlightsRepository {
      async findAll() {
-        const flights = await got.get('https://coding-challenge.powerus.de/flight/source1').json();
+        const flights = await request('https://coding-challenge.powerus.de/flight/source1');
         console.log(flights);
         return flights;
     }
