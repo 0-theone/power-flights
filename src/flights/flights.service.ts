@@ -16,9 +16,9 @@ export class FlightsService {
             )
         ).pipe(map(async (results: any[]) => {
             const source = [...results[0].data?.flights, ...results[1].data?.flights];
-            const filteredArray = this.removeDuplicates(source);
+            const flights = this.removeDuplicates(source);
 
-            return {filteredArray}; 
+            return {flights}; 
         }));
 
         return flights;
