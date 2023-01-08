@@ -1,7 +1,7 @@
 import { Injectable, } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios/dist';
 import { catchError, forkJoin, of, map, filter } from 'rxjs';
-import { FlightsSlice } from './interfaces';
+import { FlightsSlice, Flight } from './interfaces';
 import { createHash } from 'node:crypto'
 
 
@@ -20,15 +20,16 @@ export class FlightsService {
             const source = [...results[0].data?.flights, ...results[1].data?.flights];
             let seen = {};
 
-            const mergedFlights = source.filter(flight => {
-                const hash = createHash('md5').update(JSON.stringify(flight.slices)).digest('hex');
-                if (!seen.hasOwnProperty(hash)) {
-                  seen[hash] = true
-                  return flight;
+            const filteredArray = source.filter((flights) => flights.slices.some((flight: Flight) => {
+                const {flight_number,  departure_date_time_utc, arrival_date_time_utc } = flight;
+                const id = `${flight_number}-${departure_date_time_utc}-${arrival_date_time_utc}`;
+                if (!seen.hasOwnProperty(id)) {
+                    seen[id] = true
+                    return flight;
                 }
-            });
-            
-            return {mergedFlights}; 
+            }))
+
+            return {filteredArray, length: filteredArray.length}; 
         }));
 
         return flights;
