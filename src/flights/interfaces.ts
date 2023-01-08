@@ -7,7 +7,7 @@ export interface Flight {
     duration: number,
 }
 
-export interface FlightsSlice {
+export interface FlightSlice {
     slices: Flight[],
     price: number
 }

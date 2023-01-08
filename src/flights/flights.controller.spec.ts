@@ -2,12 +2,14 @@ import { Test } from '@nestjs/testing';
 import { FlightsController } from './flights.controller';
 import { FlightsService } from './flights.service';
 import { HttpService } from '@nestjs/axios/dist';
-import { FlightSlice } from './flightSlice.entity';
+import { FlightSlice } from './interfaces';
+import { Observable } from 'rxjs';
 
 
 describe('FlightsController', () => {
   let controller: FlightsController;
-  let fakeFlightsService: Partial<FlightsService>;
+  let fakeFlightsService; //Implement type
+  const flightsA: FlightSlice[] = [];
 
   beforeEach(async () => {
     const fakeHttpService = {
@@ -15,7 +17,7 @@ describe('FlightsController', () => {
     };
 
     fakeFlightsService = {
-      findAll: () => Promise.resolve({flights: []} as FlightSlice[])
+      findAll: () => Promise.resolve({flights: flightsA}),
     };
 
     const module = await Test.createTestingModule({
