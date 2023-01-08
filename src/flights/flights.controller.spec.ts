@@ -7,6 +7,7 @@ it('can create an instance of flight controller', async () => {
   }).compile();
 
   const controller = module.get(FlightsController);
+  
   expect(controller).toBeDefined();
 });
 

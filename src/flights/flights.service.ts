@@ -2,6 +2,7 @@ import { Injectable, } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios/dist';
 import { catchError, forkJoin, of, map } from 'rxjs';
 import { FlightsSlice, Flight } from './interfaces';
+import { createHash } from 'node:crypto'
 
 @Injectable()
 export class FlightsService {
@@ -13,11 +14,11 @@ export class FlightsService {
             urls.map(source => 
                 this.httpService.get<FlightsSlice[]>(source).pipe(catchError(e => of(e)))
             )
-        ).pipe(map((results: any[]) => {
+        ).pipe(map(async (results: any[]) => {
             const source = [...results[0].data?.flights, ...results[1].data?.flights];
             const filteredArray = this.removeDuplicates(source);
 
-            return {filteredArray, length: filteredArray.length}; 
+            return {filteredArray}; 
         }));
 
         return flights;
@@ -25,13 +26,13 @@ export class FlightsService {
 
     removeDuplicates(array: FlightsSlice[]) {
         let seen = {};
-        return array.filter((flights) => flights.slices.some((flight: Flight) => {
-            const {flight_number,  departure_date_time_utc, arrival_date_time_utc } = flight;
-            const id = `${flight_number}-${departure_date_time_utc}-${arrival_date_time_utc}`;
-            if (!seen.hasOwnProperty(id)) {
-                seen[id] = true
-                return flight;
+        const filtered = array.filter(flight => {
+            const hash = createHash('md5').update(JSON.stringify(flight.slices)).digest('hex');
+            if (!seen.hasOwnProperty(hash)) {
+              seen[hash] = true
+              return flight;
             }
-        }))
+        });
+        return filtered;
     }
 }
