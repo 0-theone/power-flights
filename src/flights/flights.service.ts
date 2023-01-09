@@ -3,14 +3,16 @@ import { HttpService } from '@nestjs/axios/dist';
 import { catchError, forkJoin, of, map } from 'rxjs';
 import { FlightSlice } from './interfaces';
 import { createHash } from 'node:crypto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class FlightsService {
-    constructor(private readonly httpService: HttpService) {}
+    constructor(private readonly httpService: HttpService, private readonly configService: ConfigService) {}
+
     async findAll(): Promise<FlightSlice[]> {
         let flights: any=[];
-        const urls = ['https://coding-challenge.powerus.de/flight/source1', 'https://coding-challenge.powerus.de/flight/source2'];
-        
+        const urls: string[] =  this.configService.get<string>('sources').split(',');
+
         flights = forkJoin(
             urls.map(source => 
                 this.httpService.get<FlightSlice[]>(source).pipe(catchError(e => of(e)))
