@@ -7,18 +7,18 @@ import { createHash } from 'node:crypto'
 @Injectable()
 export class FlightsService {
     constructor(private readonly httpService: HttpService) {}
-    async findAll() {
+    async findAll(): Promise<FlightSlice[]> {
+        let flights: any=[]; //check fix
         const urls = ['https://coding-challenge.powerus.de/flight/source1', 'https://coding-challenge.powerus.de/flight/source2'];
         
-        const flights = forkJoin(
+        flights = forkJoin(
             urls.map(source => 
                 this.httpService.get<FlightSlice[]>(source).pipe(catchError(e => of(e)))
             )
         ).pipe(map(async (results: any[]) => {
             const source = [...results[0].data?.flights, ...results[1].data?.flights];
-            const flights = this.removeDuplicates(source);
-
-            return {flights}; 
+            const filteredflights = this.removeDuplicates(source);
+            return {flights: filteredflights}; 
         }));
 
         return flights;
