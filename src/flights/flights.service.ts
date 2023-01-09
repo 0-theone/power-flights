@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios/dist';
 import { catchError, forkJoin, of, map } from 'rxjs';
 import { FlightSlice } from './interfaces';
-import { createHash } from 'node:crypto'
+import { createHash } from 'node:crypto';
 
 @Injectable()
 export class FlightsService {
@@ -15,7 +15,7 @@ export class FlightsService {
             urls.map(source => 
                 this.httpService.get<FlightSlice[]>(source).pipe(catchError(e => of(e)))
             )
-        ).pipe(map(async (results: any[]) => {
+        ).pipe(map(async (results) => {
             const source = [...results[0].data?.flights, ...results[1].data?.flights];
             const filteredflights = this.removeDuplicates(source);
             return {flights: filteredflights}; 
