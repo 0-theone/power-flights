@@ -1,14 +1,14 @@
-import { Injectable, } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios/dist';
 import { catchError, forkJoin, of, map } from 'rxjs';
-import { FlightSlice, Flight } from './interfaces';
+import { FlightSlice } from './interfaces';
 import { createHash } from 'node:crypto'
 
 @Injectable()
 export class FlightsService {
     constructor(private readonly httpService: HttpService) {}
     async findAll(): Promise<FlightSlice[]> {
-        let flights: any=[]; //check fix
+        let flights: any=[];
         const urls = ['https://coding-challenge.powerus.de/flight/source1', 'https://coding-challenge.powerus.de/flight/source2'];
         
         flights = forkJoin(
@@ -26,13 +26,12 @@ export class FlightsService {
 
     removeDuplicates(array: FlightSlice[]) {
         let seen = {};
-        const filtered = array.filter(flight => {
+        return array.filter(flight => {
             const hash = createHash('md5').update(JSON.stringify(flight.slices)).digest('hex');
             if (!seen.hasOwnProperty(hash)) {
               seen[hash] = true
               return flight;
             }
         });
-        return filtered;
     }
 }
