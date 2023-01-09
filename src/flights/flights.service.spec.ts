@@ -40,7 +40,9 @@ describe('FlightsService', () => {
   });
 
   it('filters an array of duplicates', async () => {
-    const filteredArray = service.removeDuplicates(duplicatedFlightsMock);
+    const flights = duplicatedFlightsMock;
+    expect(flights.length).toEqual(2);
+    const filteredArray = service.removeDuplicates(flights);
     expect(filteredArray.length).toEqual(1);
   });
  

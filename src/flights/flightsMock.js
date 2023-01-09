@@ -41,6 +41,6 @@ module.exports = {
         }
       ],
       "price": 129
-    }
+    },
   ]
 }
