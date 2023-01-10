@@ -9,6 +9,8 @@
 
 - New flight sources can be added into .env file
 
+- After running 'npm run start' check the flightss at http://localhost:3000/flights
+
 ## Installation
 
 ```bash
@@ -27,8 +29,6 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
-
-[check the flights]: http://localhost:3000/flights
 
 ## Test
 
