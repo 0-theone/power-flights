@@ -1,6 +1,11 @@
 ## Description
-# Node.js HTTP client library
-[Got](https://github.com/sindresorhus/got) Human-friendly and powerful HTTP request library for Node.js.
+# POWER FLIGHTS - HTTP client library
+![Nodejs](https://img.shields.io/badge/-Nodejs-339933?style=flat-square&logo=Node.js&logoColor=white)
+![NestJS](https://img.shields.io/badge/-NestJS-E0234E?style=flat-square&logo=nestjs&logoColor=white)
+
+- A service in Node.js using Nest.js as framework.
+- It loads flights from different sources and remove duplicates.
+- New flight sources can be added into .env file
 
 ## Installation
 
@@ -13,6 +18,7 @@ $ npm install
 ```bash
 # development
 $ npm run start
+[check the flights]: http://localhost:3000/flights
 
 # watch mode
 $ npm run start:dev
