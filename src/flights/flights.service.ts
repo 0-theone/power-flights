@@ -15,7 +15,7 @@ export class FlightsService {
 
         return forkJoin(
             urls
-            .map(source => this.getFlight(source)))
+            .map(source => this.getFlights(source)))
             .pipe(map(async (results: AxiosResponse[]) => {
                 const sources = [...results[0].data?.flights, ...results[1].data?.flights];
                 const filteredflights = removeDuplicates(sources);
@@ -24,7 +24,7 @@ export class FlightsService {
         );
     }
 
-    getFlight(source: string): Observable<AxiosResponse<FlightSlice[], any>> {
+    getFlights(source: string): Observable<AxiosResponse<FlightSlice[], any>> {
         return this.httpService.get<FlightSlice[]>(source).pipe(catchError(e => throwError(() => e)))
     }
 }

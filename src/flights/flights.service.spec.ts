@@ -32,7 +32,8 @@ describe('FlightsService', () => {
     }).compile();
 
     service = module.get(FlightsService);
-    service.getFlight = jest.fn().mockReturnValue(flightsMock);
+    service.getFlights = jest.fn().mockReturnValue(flightsMock);
+    service.findAll = jest.fn().mockReturnValue(flightsMock);
   });
 
   it('can create an instance of flights service', async () => {
@@ -46,15 +47,16 @@ describe('FlightsService', () => {
   });
 
 
-  it('getFlight returns flights from a single source', () => {
+  it('getFlights returns flights from a single source', () => {
     const result = flightsMock;
-    const flights = service.getFlight('source');
+    const flights = service.getFlights('source');
     expect(flights).toBe(result);
   });
 
-  it('has a findAll method', async () => {
-    const flights = await service.findAll();
-    expect(flights).toBeDefined();
+  it('findAll returns flights array', async () => {
+    const result = flightsMock;
+    const flights = service.findAll();
+    expect(flights).toBe(result);
   });
 
 });
