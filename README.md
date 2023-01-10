@@ -9,7 +9,7 @@
 
 - New flight sources can be added into .env file
 
-- After running 'npm run start' check the flightss at http://localhost:3000/flights
+- After running 'npm run start' check the flights at http://localhost:3000/flights
 
 ## Installation
 
