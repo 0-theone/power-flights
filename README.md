@@ -20,7 +20,6 @@ $ npm install
 ```bash
 # development
 $ npm run start
-[check the flights]: http://localhost:3000/flights
 
 # watch mode
 $ npm run start:dev
@@ -28,6 +27,8 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
+
+[check the flights]: http://localhost:3000/flights
 
 ## Test
 
