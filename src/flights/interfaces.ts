@@ -11,7 +11,3 @@ export interface FlightSlice {
     slices: Flight[],
     price: number
 }
-
-export interface AxiosError {
-    error: string
-}

@@ -5,13 +5,13 @@ import { FlightsService } from './flights.service';
 export class FlightsController {
     constructor(public flightsService: FlightsService) {}
     @Get()
-    async listFlights() {
+    async findAll() {
         const flights = await this.flightsService.findAll();
 
         if (!flights) {
          throw new NotFoundException('Flights not found');
         }
- 
+
         return flights;
     }
 }

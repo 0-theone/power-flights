@@ -2,6 +2,7 @@ import { Test } from '@nestjs/testing';
 import { FlightsController } from './flights.controller';
 import { FlightsService } from './flights.service';
 import { HttpService } from '@nestjs/axios/dist';
+import { duplicatedFlightsMock } from './mocks/duplicated';
 
 describe('FlightsController', () => {
   let controller: FlightsController;
@@ -13,7 +14,7 @@ describe('FlightsController', () => {
     };
 
     fakeFlightsService = {
-      findAll: () => Promise.resolve([]),
+      findAll: () => Promise.resolve(duplicatedFlightsMock),
     };
 
     const module = await Test.createTestingModule({
@@ -35,6 +36,12 @@ describe('FlightsController', () => {
 
   it('can create an instance of flight controller', async () => {  
     expect(controller).toBeDefined();
+  });
+
+  it('listFlights returns a list of flights', async () => {
+    const result = duplicatedFlightsMock;
+    const flights = await controller.findAll();
+    expect(flights).toBe(result);
   });
   
 });
