@@ -11,6 +11,8 @@
 
 - After running 'npm run start' check the flights at http://localhost:3000/flights
 
+- Local node version: v18.12.1
+
 ## Installation
 
 ```bash
