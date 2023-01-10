@@ -4,6 +4,7 @@ import { HttpService } from '@nestjs/axios/dist';
 
 import { FlightsService } from './flights.service';
 import { flightsMock } from './mocks/flights';
+import { responseMock } from './mocks/response';
 
 describe('FlightsService', () => {
   let service: FlightsService;
@@ -46,8 +47,14 @@ describe('FlightsService', () => {
   });
 
   it('has a findAll method', async () => {
-    const flights = service.findAll();
+    const flights = await service.findAll();
     expect(flights).toBeDefined();
+  });
+
+  it('has a transform incoming data method', async () => {
+    const transform = service.transformIncomingData(responseMock);
+    expect(service.transformIncomingData).toBeDefined();
+    expect(transform.flights).toStrictEqual(flightsMock);
   });
 
   it('has a getFlights method', async () => {
@@ -55,6 +62,5 @@ describe('FlightsService', () => {
     const flights = service.getFlights(url);
     expect(flights).toBeDefined();
   });
-
 
 });

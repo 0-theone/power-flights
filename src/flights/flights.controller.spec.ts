@@ -4,6 +4,8 @@ import { HttpService } from '@nestjs/axios/dist';
 import { FlightsController } from './flights.controller';
 import { FlightsService } from './flights.service';
 import { duplicatedFlightsMock } from './mocks/duplicated';
+import { request } from 'http';
+import { ContextIdFactory } from '@nestjs/core';
 
 describe('FlightsController', () => {
   let controller: FlightsController;
@@ -33,18 +35,19 @@ describe('FlightsController', () => {
     }).compile();
 
     controller = module.get<FlightsController>(FlightsController);
+
+
   });
 
   it('can create an instance of flight controller', async () => {  
     expect(controller).toBeDefined();
   });
 
-  it('listFlights returns a list of flights', async () => {
+  it('findAll returns a list of flights', async () => {
     const result = duplicatedFlightsMock;
     const flights = await controller.findAll();
     expect(flights).toBe(result);
   });
-
 });
 
 

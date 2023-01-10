@@ -17,15 +17,17 @@ export class FlightsService {
         return forkJoin(
             urls
             .map(source => this.getFlights(source)))
-            .pipe(map(async (results: AxiosResponse[]) => {
-                const sources = [...results[0].data?.flights, ...results[1].data?.flights];
-                const filteredflights = removeDuplicates(sources);
-                return {flights: filteredflights}; 
-            })
+            .pipe(map(async (results: AxiosResponse[]) => this.transformIncomingData(results))
         );
     }
 
     getFlights(source: string): Observable<AxiosResponse<FlightSlice[], any>> {
         return this.httpService.get<FlightSlice[]>(source).pipe(catchError(e => throwError(() => e)))
+    }
+
+    transformIncomingData(results: AxiosResponse[]) {
+        const sources = [...results[0].data?.flights, ...results[1].data?.flights];
+        const filteredflights = removeDuplicates(sources);
+        return {flights: filteredflights}; 
     }
 }
