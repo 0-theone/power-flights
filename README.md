@@ -1,5 +1,5 @@
 ## Description
-# POWER FLIGHTS - HTTP client library
+# POWER FLIGHTS
 ![Nodejs](https://img.shields.io/badge/-Nodejs-339933?style=flat-square&logo=Node.js&logoColor=white)
 ![NestJS](https://img.shields.io/badge/-NestJS-E0234E?style=flat-square&logo=nestjs&logoColor=white)
 
