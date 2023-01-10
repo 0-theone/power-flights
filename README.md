@@ -4,7 +4,9 @@
 ![NestJS](https://img.shields.io/badge/-NestJS-E0234E?style=flat-square&logo=nestjs&logoColor=white)
 
 - A service in Node.js using Nest.js as framework.
+
 - It loads flights from different sources and remove duplicates.
+
 - New flight sources can be added into .env file
 
 ## Installation
