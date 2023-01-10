@@ -1,2 +1,0 @@
-### List all flights
-GET http:localhost:3000/flights
