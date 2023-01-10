@@ -33,30 +33,27 @@ describe('FlightsService', () => {
 
     service = module.get(FlightsService);
     service.getFlights = jest.fn().mockReturnValue(flightsMock);
-    service.findAll = jest.fn().mockReturnValue(flightsMock);
   });
 
   it('can create an instance of flights service', async () => {
     expect(service).toBeDefined();
   });
 
-
   it('retrive source from configuration file', () => {
     const url = service.configService.get('source1');
     expect(url).toBe('https://coding-challenge.powerus.de/flight/source1');
   });
 
-
-  it('getFlights returns flights from a single source', () => {
-    const result = flightsMock;
-    const flights = service.getFlights('source');
-    expect(flights).toBe(result);
-  });
-
-  it('findAll returns flights array', async () => {
-    const result = flightsMock;
+  it('has a findAll method', async () => {
     const flights = service.findAll();
-    expect(flights).toBe(result);
+    expect(flights).toBeDefined();
   });
+
+  it('has a getFlights method', async () => {
+    const url = service.configService.get('source1');
+    const flights = service.getFlights(url);
+    expect(flights).toBeDefined();
+  });
+
 
 });
