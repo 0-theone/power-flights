@@ -7,10 +7,13 @@ import { FlightsModule } from './flights/flights.module';
 import config from './configuration';
 
 @Module({
-  imports: [FlightsModule, ConfigModule.forRoot({
-    isGlobal: true,
-    load: [config] 
-  })],
+  imports: [
+    FlightsModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [config],
+    }),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

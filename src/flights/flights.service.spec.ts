@@ -16,11 +16,12 @@ describe('FlightsService', () => {
     };
 
     const fakeConfigService = {
-      get: () => "https://coding-challenge.powerus.de/flight/source1",
+      get: () => 'https://coding-challenge.powerus.de/flight/source1',
     };
 
-      const module = await Test.createTestingModule({
-      providers: [FlightsService,
+    const module = await Test.createTestingModule({
+      providers: [
+        FlightsService,
         {
           provide: HttpService,
           useValue: fakeHttpService,
@@ -30,7 +31,6 @@ describe('FlightsService', () => {
           useValue: fakeConfigService,
         },
       ],
-      
     }).compile();
 
     service = module.get(FlightsService);
@@ -62,5 +62,4 @@ describe('FlightsService', () => {
     const flights = service.getFlights(url);
     expect(flights).toBeDefined();
   });
-
 });
