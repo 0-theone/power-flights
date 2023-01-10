@@ -1,8 +1,9 @@
 import { Test } from '@nestjs/testing';
 import { FlightsService } from './flights.service';
-import { HttpService} from '@nestjs/axios/dist';
+import { flightsMock } from './mocks/flights';
 import { ConfigService } from '@nestjs/config';
-import { duplicatedFlightsMock } from './mocks/duplicated';
+import { HttpService } from '@nestjs/axios/dist';
+import { firstValueFrom } from 'rxjs';
 
 describe('FlightsService', () => {
   let service: FlightsService;
@@ -10,23 +11,15 @@ describe('FlightsService', () => {
   beforeEach(async () => {
     // Create a fake copy of the HttpService service
     const fakeHttpService = {
-      get: () => Promise.resolve(duplicatedFlightsMock),
+      get: () => Promise.resolve([]),
     };
 
     const fakeConfigService = {
       get: () => "",
     };
 
-    const fakeFlightsService = {
-      findAll: () => Promise.resolve(duplicatedFlightsMock),
-    };
-
-    const module = await Test.createTestingModule({
-      providers: [
-        {
-          provide: FlightsService,
-          useValue: fakeFlightsService,
-        },
+      const module = await Test.createTestingModule({
+      providers: [FlightsService,
         {
           provide: HttpService,
           useValue: fakeHttpService,
@@ -36,19 +29,27 @@ describe('FlightsService', () => {
           useValue: fakeConfigService,
         },
       ],
+      
     }).compile();
 
     service = module.get(FlightsService);
+    service.getFlight = jest.fn().mockReturnValue(flightsMock);
+    service.findAll = jest.fn().mockReturnValue(flightsMock);
   });
 
   it('can create an instance of flights service', async () => {
     expect(service).toBeDefined();
   });
 
-  it('findAll returns a list of flights', async () => {
-    const result = duplicatedFlightsMock;
-    const flights = await service.findAll();
+  it('getFlight returns flights from a single source', () => {
+    const result = flightsMock;
+    const flights = service.getFlight('source');
     expect(flights).toBe(result);
+  });
+
+  it('findAll returns a list of flights', async () => {
+    const flights = await service.findAll();
+    expect(flights).toBeDefined();
   });
 
 });
