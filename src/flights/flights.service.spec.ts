@@ -1,8 +1,9 @@
 import { Test } from '@nestjs/testing';
-import { FlightsService } from './flights.service';
-import { flightsMock } from './mocks/flights';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios/dist';
+
+import { FlightsService } from './flights.service';
+import { flightsMock } from './mocks/flights';
 
 describe('FlightsService', () => {
   let service: FlightsService;

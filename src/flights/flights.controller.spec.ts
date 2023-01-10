@@ -1,7 +1,8 @@
 import { Test } from '@nestjs/testing';
+import { HttpService } from '@nestjs/axios/dist';
+
 import { FlightsController } from './flights.controller';
 import { FlightsService } from './flights.service';
-import { HttpService } from '@nestjs/axios/dist';
 import { duplicatedFlightsMock } from './mocks/duplicated';
 
 describe('FlightsController', () => {
@@ -44,10 +45,6 @@ describe('FlightsController', () => {
     expect(flights).toBe(result);
   });
 
-  afterAll((done) => {
-    done();
-  });
-  
 });
 
 
