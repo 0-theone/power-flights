@@ -3,7 +3,6 @@ import { FlightsService } from './flights.service';
 import { flightsMock } from './mocks/flights';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios/dist';
-import { firstValueFrom } from 'rxjs';
 
 describe('FlightsService', () => {
   let service: FlightsService;
@@ -15,7 +14,7 @@ describe('FlightsService', () => {
     };
 
     const fakeConfigService = {
-      get: () => "",
+      get: () => "https://coding-challenge.powerus.de/flight/source1",
     };
 
       const module = await Test.createTestingModule({
@@ -34,12 +33,18 @@ describe('FlightsService', () => {
 
     service = module.get(FlightsService);
     service.getFlight = jest.fn().mockReturnValue(flightsMock);
-    service.findAll = jest.fn().mockReturnValue(flightsMock);
   });
 
   it('can create an instance of flights service', async () => {
     expect(service).toBeDefined();
   });
+
+
+  it('retrive source from configuration file', () => {
+    const url = service.configService.get('source1');
+    expect(url).toBe('https://coding-challenge.powerus.de/flight/source1');
+  });
+
 
   it('getFlight returns flights from a single source', () => {
     const result = flightsMock;
@@ -47,7 +52,7 @@ describe('FlightsService', () => {
     expect(flights).toBe(result);
   });
 
-  it('findAll returns a list of flights', async () => {
+  it('has a findAll method', async () => {
     const flights = await service.findAll();
     expect(flights).toBeDefined();
   });

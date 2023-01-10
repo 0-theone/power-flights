@@ -8,8 +8,7 @@ import { removeDuplicates } from './helpers/remove-duplicates'
 
 @Injectable()
 export class FlightsService {
-    flightsSubscription: any;
-    constructor(private readonly httpService: HttpService, private readonly configService: ConfigService) {}
+    constructor(public readonly httpService: HttpService, public readonly configService: ConfigService) {}
    
     async findAll() {    
         const urls: string[] = [this.configService.get('source1'), this.configService.get('source2')];

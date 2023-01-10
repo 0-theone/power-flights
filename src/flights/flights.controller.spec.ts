@@ -43,6 +43,10 @@ describe('FlightsController', () => {
     const flights = await controller.findAll();
     expect(flights).toBe(result);
   });
+
+  afterAll((done) => {
+    done();
+  });
   
 });
 
