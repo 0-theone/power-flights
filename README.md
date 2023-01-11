@@ -13,6 +13,25 @@
 
 - Local node version: v18.12.1
 
+- As your data structure always has a round trip within a slice, I considered the combination of the two (outbound and return) as an identifier.
+
+The remove duplicates function could also be done in the following way: 
+
+```javascript
+    // Using Node.js crypto.createHash() Method
+    const filteredFlights = source.filter(flight => {
+        const hash = createHash('md5').update(JSON.stringify(flight.slices)).digest('hex');
+        if (!seen.hasOwnProperty(hash)) {
+            seen[hash] = true
+            return flight;
+        }
+    });
+```
+
+```bash
+$ npm install
+```
+
 ## Installation
 
 ```bash
