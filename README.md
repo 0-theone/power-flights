@@ -27,7 +27,7 @@ The remove duplicates function could also be done in the following way:
             return flight;
         }
     });
-    return{ flights: filteredFlights }
+    return { flights: filteredFlights }
 ```
 
 ```bash
