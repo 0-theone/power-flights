@@ -15,36 +15,32 @@ export class FlightsService {
   ) {}
 
   async findAll() {
-    try {
-      const urls: string[] = [
-        this.configService.get('source1'),
-        this.configService.get('source2'),
-      ];
-  
-      return forkJoin(urls.map((source) => this.getFlights(source))).pipe(
-        map(async (results: AxiosResponse[]) =>
-          this.transformIncomingData(results),
-        ),
-      );
+    const urls: string[] = [
+      this.configService.get('source1'),
+      this.configService.get('source2'),
+    ];
 
-    } catch (e) {
-      console.log(e);
-      throwError(() => e);
-    }
+    return forkJoin(urls.map((source) => this.getFlights(source))).pipe(
+      map(async (results: AxiosResponse[]) =>
+        this.transformIncomingData(results),
+      ),
+    );
   }
 
   getFlights(source: string): Observable<AxiosResponse<FlightSlice[], any>> {
-    return this.httpService
-      .get<FlightSlice[]>(source)
-      .pipe(catchError((e) => throwError(() => {  
-        console.log(e);
-        return `Not possible to load from source. Please try again`;
-      })));
+    return this.httpService.get<FlightSlice[]>(source).pipe(
+      catchError((e) =>
+        throwError(() => {
+          console.log(e);
+          return `Not possible to load from source. Please try again`;
+        }),
+      ),
+    );
   }
 
   transformIncomingData(results: AxiosResponse[]) {
     let sources: FlightSlice[] = [];
-    results.forEach(result => {
+    results.forEach((result) => {
       sources = [...sources, ...result?.data?.flights];
     });
     const filteredflights = removeDuplicates(sources);
