@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios/dist';
 import { ConfigService } from '@nestjs/config';
 import { AxiosResponse } from 'axios';
-import { forkJoin, throwError, Observable } from 'rxjs';
+import { catchError, forkJoin, map, throwError, Observable } from 'rxjs';
 
 import { FlightSlice } from './interfaces';
 import { removeDuplicates } from './helpers/remove-duplicates';

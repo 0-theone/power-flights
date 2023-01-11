@@ -19,6 +19,7 @@ The remove duplicates function could also be done in the following way:
 
 ```javascript
     // Using Node.js crypto.createHash() Method
+    let seen = {};
     const filteredFlights = source.filter(flight => {
         const hash = createHash('md5').update(JSON.stringify(flight.slices)).digest('hex');
         if (!seen.hasOwnProperty(hash)) {
@@ -26,6 +27,7 @@ The remove duplicates function could also be done in the following way:
             return flight;
         }
     });
+    return{ flights: filteredFlights }
 ```
 
 ```bash
