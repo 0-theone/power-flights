@@ -34,7 +34,10 @@ export class FlightsService {
   }
 
   transformIncomingData(results: AxiosResponse[]) {
-    const sources = [...results[0].data?.flights, ...results[1].data?.flights];
+    let sources: FlightSlice[] = [];
+    results.forEach(result => {
+      sources = [...sources, ...result?.data?.flights];
+    });
     const filteredflights = removeDuplicates(sources);
     return { flights: filteredflights };
   }
