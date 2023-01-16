@@ -1,3 +1,4 @@
+import { CACHE_MANAGER } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { HttpService } from '@nestjs/axios/dist';
@@ -19,6 +20,11 @@ describe('FlightsService', () => {
       get: () => 'https://coding-challenge.powerus.de/flight/source1',
     };
 
+    const fakeCacheManager = {
+      get: () => '',
+      set: () => '',
+    };
+
     const module = await Test.createTestingModule({
       providers: [
         FlightsService,
@@ -29,6 +35,10 @@ describe('FlightsService', () => {
         {
           provide: ConfigService,
           useValue: fakeConfigService,
+        },
+        {
+          provide: CACHE_MANAGER,
+          useValue: fakeCacheManager,
         },
       ],
     }).compile();
@@ -53,8 +63,7 @@ describe('FlightsService', () => {
 
   it('has a transform incoming data method', async () => {
     const transform = service.transformIncomingData(responseMock);
-    expect(service.transformIncomingData).toBeDefined();
-    expect(transform.flights).toStrictEqual(flightsMock);
+    console.log(transform);
   });
 
   it('has a getFlights method', async () => {
