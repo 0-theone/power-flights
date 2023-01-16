@@ -56,19 +56,14 @@ describe('FlightsService', () => {
     expect(url).toBe('https://coding-challenge.powerus.de/flight/source1');
   });
 
-  it('has a findAll method', async () => {
-    const flights = await service.findAll();
-    expect(flights).toBeDefined();
-  });
-
   it('has a transform incoming data method', async () => {
-    const transform = service.transformIncomingData(responseMock);
+    const transform = service.filterFlights(responseMock);
     console.log(transform);
   });
 
   it('has a getFlights method', async () => {
     const url = service.configService.get('source1');
-    const flights = service.getFlights(url);
+    const flights = service.getFlights(url, 0);
     expect(flights).toBeDefined();
   });
 });

@@ -1,37 +1,50 @@
-import { Inject, Injectable, CACHE_MANAGER } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  CACHE_MANAGER,
+  NestInterceptor,
+  CallHandler,
+  ExecutionContext,
+  RequestTimeoutException,
+} from '@nestjs/common';
 import { Cache } from 'cache-manager';
 import { HttpService } from '@nestjs/axios/dist';
 import { ConfigService } from '@nestjs/config';
-import { AxiosError, AxiosResponse } from 'axios';
 import {
   catchError,
-  combineLatest,
-  map,
-  throwError,
-  Observable,
   timeout,
-  of,
   firstValueFrom,
+  Observable,
+  TimeoutError,
+  throwError,
 } from 'rxjs';
 
-import { FlightSlice } from './interfaces';
+import { FlightResponse, FlightSlice } from './interfaces';
 import { removeDuplicates } from './helpers/remove-duplicates';
 
 @Injectable()
-export class FlightsService {
+export class FlightsService implements NestInterceptor {
   constructor(
     public readonly httpService: HttpService,
     public readonly configService: ConfigService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
+  intercept(
+    _context: ExecutionContext,
+    next: CallHandler<any>,
+  ): Observable<any> | Promise<Observable<any>> {
+    return next.handle().pipe(
+      timeout(1000),
+      catchError((err) => {
+        if (err instanceof TimeoutError) {
+          return throwError(() => new RequestTimeoutException());
+        }
+        return throwError(() => err);
+      }),
+    );
+  }
 
   async findAll() {
-    const flights = await this.cacheManager.get('flights');
-
-    if (flights) {
-      return flights;
-    }
-
     const urls: string[] = [
       this.configService.get('source1'),
       this.configService.get('source2'),
@@ -39,39 +52,40 @@ export class FlightsService {
       this.configService.get('source3'),
     ];
 
-    const promises = urls.map(async (source, index) => await this.getFlights(source, index))
+    const promises = urls.map(
+      async (source, index) => await this.getFlights(source, index),
+    );
     const res = await this.fetchAll(promises);
-    return this.filterDuplicates(res);
+    return this.filterFlights(res);
   }
-
 
   async fetchAll(promises: any) {
     const results = await Promise.allSettled(promises);
     return results;
   }
 
-  async getFlights(source, index) {
-    let cached = await this.cacheManager.get(`source${index}`);
+  async getFlights(source: string, index: number) {
+    const cached = await this.cacheManager.get(`source${index}`);
     if (cached) {
-      console.log('Return cached response', source);
+      console.log(`Return cached data from source: ${source}`);
       return cached;
     }
 
     const { data } = await firstValueFrom(
       this.httpService.get(source).pipe(
-        catchError((error: AxiosError) => {
-          throw 'An error happened!';
+        catchError(() => {
+          throw `Not possible to fetch from source: ${source}`;
         }),
       ),
     );
     if (data) {
-      console.log("set cache for", source)
+      console.log('set cache for', source);
       await this.cacheManager.set(`source${index}`, data);
     }
     return data;
   }
 
-  filterDuplicates(results) {
+  filterFlights(results: FlightResponse[]) {
     let sources: FlightSlice[] = [];
     results.forEach((result) => {
       if (result.status === 'fulfilled') {

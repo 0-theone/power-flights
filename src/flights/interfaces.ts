@@ -11,3 +11,10 @@ export interface FlightSlice {
   slices: Flight[];
   price: number;
 }
+
+export interface FlightResponse {
+  status: string;
+  value?: {
+    flights: FlightSlice[];
+  };
+}
