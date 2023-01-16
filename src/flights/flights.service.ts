@@ -35,12 +35,14 @@ export class FlightsService {
     const urls: string[] = [
       this.configService.get('source1'),
       this.configService.get('source2'),
+      // Test with a failing request
       this.configService.get('source3'),
     ];
 
-    const promises = urls.map(async (source) => await this.getFlights(source))
+    const promises = urls.map(async (source, index) => await this.getFlights(source, index))
     const res = await this.fetchAll(promises);
     console.log(res, "shazam")
+    return res;
   }
 
 
@@ -49,7 +51,13 @@ export class FlightsService {
     return results;
   }
 
-  async getFlights(source) {
+  async getFlights(source, index) {
+    let cached = await this.cacheManager.get(`source${index}`);
+    if (cached) {
+      console.log('Return cached response', source);
+      return cached;
+    }
+
     const { data } = await firstValueFrom(
       this.httpService.get(source).pipe(
         catchError((error: AxiosError) => {
@@ -57,13 +65,14 @@ export class FlightsService {
         }),
       ),
     );
-    return data?.flights;
+    return data;
   }
 
   async transformIncomingData(results: AxiosResponse[]) {
     let sources: FlightSlice[] = [];
     results.forEach((result) => {
-      sources = [...sources, ...result?.data?.flights];
+
+      //sources = [...sources, ...result];
     });
     const flights = { flights: removeDuplicates(sources) };
     await this.cacheManager.set('flights', flights);
