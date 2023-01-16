@@ -2,7 +2,7 @@ import { Inject, Injectable, CACHE_MANAGER } from '@nestjs/common';
 import { Cache } from 'cache-manager';
 import { HttpService } from '@nestjs/axios/dist';
 import { ConfigService } from '@nestjs/config';
-import { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import {
   catchError,
   combineLatest,
@@ -11,6 +11,7 @@ import {
   Observable,
   timeout,
   of,
+  firstValueFrom,
 } from 'rxjs';
 
 import { FlightSlice } from './interfaces';
@@ -34,29 +35,29 @@ export class FlightsService {
     const urls: string[] = [
       this.configService.get('source1'),
       this.configService.get('source2'),
+      this.configService.get('source3'),
     ];
 
-    return combineLatest(urls.map((source) => this.getFlights(source)))
-      .pipe(
-        map(async (results: AxiosResponse[]) =>
-          this.transformIncomingData(results),
-        ),
-      )
-      .pipe(
-        timeout(1000),
-        catchError(() => of(`Request timed out after one second`)),
-      );
+    const promises = urls.map(async (source) => await this.getFlights(source))
+    const res = await this.fetchAll(promises);
+    console.log(res, "shazam")
   }
 
-  getFlights(source: string): Observable<AxiosResponse<FlightSlice[], any>> {
-    return this.httpService.get<FlightSlice[]>(source).pipe(
-      catchError((e) =>
-        throwError(() => {
-          console.log(e);
-          return `Not possible to load from source. Please try again`;
+
+  async fetchAll(promises: any) {
+    const results = await Promise.allSettled(promises);
+    return results;
+  }
+
+  async getFlights(source) {
+    const { data } = await firstValueFrom(
+      this.httpService.get(source).pipe(
+        catchError((error: AxiosError) => {
+          throw 'An error happened!';
         }),
       ),
     );
+    return data?.flights;
   }
 
   async transformIncomingData(results: AxiosResponse[]) {
