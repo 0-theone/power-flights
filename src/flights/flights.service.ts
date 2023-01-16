@@ -41,8 +41,7 @@ export class FlightsService {
 
     const promises = urls.map(async (source, index) => await this.getFlights(source, index))
     const res = await this.fetchAll(promises);
-    console.log(res, "shazam")
-    return res;
+    return this.filterDuplicates(res);
   }
 
 
@@ -65,17 +64,21 @@ export class FlightsService {
         }),
       ),
     );
+    if (data) {
+      console.log("set cache for", source)
+      await this.cacheManager.set(`source${index}`, data);
+    }
     return data;
   }
 
-  async transformIncomingData(results: AxiosResponse[]) {
+  filterDuplicates(results) {
     let sources: FlightSlice[] = [];
     results.forEach((result) => {
-
-      //sources = [...sources, ...result];
+      if (result.status === 'fulfilled') {
+        sources = [...sources, ...result.value.flights];
+      }
     });
     const flights = { flights: removeDuplicates(sources) };
-    await this.cacheManager.set('flights', flights);
     return flights;
   }
 }
