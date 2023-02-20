@@ -3,6 +3,8 @@
 ![Nodejs](https://img.shields.io/badge/-Nodejs-339933?style=flat-square&logo=Node.js&logoColor=white)
 ![NestJS](https://img.shields.io/badge/-NestJS-E0234E?style=flat-square&logo=nestjs&logoColor=white)
 
+- I am very proud of this project - (Tests must be improved though)
+
 - A service in Node.js using Nest.js as framework.
 
 - It loads flights from different sources and remove duplicates.
@@ -13,7 +15,7 @@
 
 - Local node version: v18.12.1
 
-- As your data structure always has a round trip within a slice, I considered the combination of the two (outbound and return) as an identifier.
+- As the data structure always has a round trip within a slice, I considered the combination of the two (outbound and return) as an identifier.
 
 The remove duplicates function could also be done in the following way: 
 
